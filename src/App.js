@@ -1,56 +1,76 @@
 import { useEffect, useState } from 'react';
-import './App.css';
+import colorArray from './data/colors';
 import quoteUtils from './utils/quote';
+import './App.css';
 
 function App() {
-  const [quote, setQuote] = useState([]);
+  const [quote, setQuote] = useState({});
+  const [quotes, setQuotes] = useState([]);
 
   useEffect(() => {
     quoteUtils.getQuotes().then((data) => {
-      setQuote(data);
+      setQuotes(data);
+      const random = Math.floor(Math.random() * data.length);
+      setQuote(data[random]);
     });
-
-    // getQuote();
+    setColors();
   }, []);
 
-  const getQuote = () => {
-    const options = {
-      method: 'POST',
-      headers: {
-        'X-RapidAPI-Key': '99eb7f3cdemsh2d60870fb02afc9p1721bdjsnab80c781e9ed',
-        'X-RapidAPI-Host': 'andruxnet-random-famous-quotes.p.rapidapi.com',
-      },
-    };
-
-    fetch(
-      'https://andruxnet-random-famous-quotes.p.rapidapi.com/?cat=movies&count=1',
-      options
-    )
-      .then((res) => {
-        return res.json().then((data) => setQuote(data[0]));
-      })
-      .catch((err) => console.error(err));
+  const setNewQuote = () => {
+    const random = Math.floor(Math.random() * quotes.length);
+    setQuote(quotes[random]);
   };
-  console.log(quote);
+
+  const setColors = () => {
+    const random = Math.floor(Math.random() * colorArray.length);
+
+    const appEl = document.getElementsByClassName('App');
+    const quoteBox = document.getElementById('quote-box');
+    appEl[0].style.backgroundColor = colorArray[random];
+    quoteBox.style.color = colorArray[random];
+
+    const buttons = document.getElementsByClassName('button');
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].style.backgroundColor = colorArray[random];
+    }
+  };
+
+  const getNewQuote = () => {
+    setNewQuote();
+    setColors();
+  };
 
   return (
-    <div className='App'>
-      <div id='wrapper'>
-        <div id='quote-box'>
-          <div id='text'>
-            <h1>{quote.quote}</h1>
-          </div>
-          <div id='author'>
-            {quote.author && '- '} <span>{quote.author}</span>
-          </div>
-          <div className='buttons'>
-            <button className='button' id='new-quote'>
-              new quote
-            </button>
+    <>
+      <div className='App'>
+        <div id='wrapper'>
+          <div id='quote-box'>
+            <div className='quote-text'>
+              {quote.text && (
+                <i className='fa fa-quote-left' aria-hidden='true'></i>
+              )}
+              <span>{quote.text}</span>
+            </div>
+            <div className='quote-author'>
+              {quote.author && '- '} <span>{quote.author}</span>
+            </div>
+
+            <div className='buttons'>
+              <a className='button' id='tweet-quote'>
+                <i className='fa-brands fa-twitter'></i>
+              </a>
+              <a className='button' id='whatsapp-quote'>
+                <i className='fa-brands fa-whatsapp'></i>
+              </a>
+
+              <button className='button' id='new-quote' onClick={getNewQuote}>
+                New quote
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
