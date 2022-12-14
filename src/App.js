@@ -24,15 +24,18 @@ function App() {
   const setColors = () => {
     const random = Math.floor(Math.random() * colorArray.length);
 
-    const appEl = document.getElementsByClassName('App');
-    const quoteBox = document.getElementById('quote-box');
-    appEl[0].style.backgroundColor = colorArray[random];
-    quoteBox.style.color = colorArray[random];
+    document.body.style.backgroundColor = colorArray[random];
+    document.body.style.color = colorArray[random];
 
     const buttons = document.getElementsByClassName('button');
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].style.backgroundColor = colorArray[random];
     }
+    console.log(colorArray[random]);
+  };
+
+  const whatsapp = () => {
+    window.open(`whatsapp://send?text=${quote.text} - ${quote.author}`);
   };
 
   const getNewQuote = () => {
@@ -41,36 +44,32 @@ function App() {
   };
 
   return (
-    <>
-      <div className='App'>
-        <div id='wrapper'>
-          <div id='quote-box'>
-            <div className='quote-text'>
-              {quote.text && (
-                <i className='fa fa-quote-left' aria-hidden='true'></i>
-              )}
-              <span>{quote.text}</span>
-            </div>
-            <div className='quote-author'>
-              {quote.author && '- '} <span>{quote.author}</span>
-            </div>
+    <div id='wrapper'>
+      <div id='quote-box'>
+        <div className='quote-text'>
+          {quote.text && (
+            <i className='fa fa-quote-left' aria-hidden='true'></i>
+          )}
+          <span>{quote.text}</span>
+        </div>
+        <div className='quote-author'>
+          {quote.author && <span>- {quote.author}</span>}
+        </div>
 
-            <div className='buttons'>
-              <a className='button' id='tweet-quote'>
-                <i className='fa-brands fa-twitter'></i>
-              </a>
-              <a className='button' id='whatsapp-quote'>
-                <i className='fa-brands fa-whatsapp'></i>
-              </a>
+        <div className='buttons'>
+          <a className='button' id='tweet-quote'>
+            <i className='fa-brands fa-twitter'></i>
+          </a>
+          <a className='button' id='whatsapp-quote' onClick={whatsapp}>
+            <i className='fa-brands fa-whatsapp'></i>
+          </a>
 
-              <button className='button' id='new-quote' onClick={getNewQuote}>
-                New quote
-              </button>
-            </div>
-          </div>
+          <button className='button' id='new-quote' onClick={getNewQuote}>
+            New quote
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
